@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Droplet</title>
+  <style>
+    :root { --fg:#1f1e1d; --muted:#6b6a66; --line:#e7e5df; --bg:#fbfaf7; --card:#fff; --water:#2f86d6; color-scheme: light dark; }
+    @media (prefers-color-scheme: dark) {
+      :root { --fg:#f3f1ec; --muted:#a8a59d; --line:#3a3936; --bg:#1f1e1c; --card:#2a2927; --water:#4ea6f2; }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; width: 300px; font: 13px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: var(--bg); }
+    header { display: flex; align-items: center; gap: 8px; padding: 14px 16px 6px; }
+    header img { width: 22px; height: 22px; }
+    h1 { font-size: 15px; margin: 0; font-weight: 650; }
+    .totals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 16px 4px; }
+    .stat { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+    .stat .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+    .stat .v { font-size: 17px; font-weight: 650; color: var(--water); font-variant-numeric: tabular-nums; }
+    .stat .c { font-size: 11px; color: var(--muted); }
+    form { padding: 6px 16px 4px; }
+    label { display: block; margin: 10px 0 0; }
+    .lbl { display: block; font-weight: 600; margin-bottom: 4px; }
+    .hint { display: block; color: var(--muted); font-size: 11.5px; margin-top: 2px; }
+    select { width: 100%; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--fg); font: inherit; }
+    .check { display: flex; gap: 8px; align-items: flex-start; }
+    .check input { margin: 3px 0 0; accent-color: var(--water); }
+    footer { padding: 12px 16px 14px; border-top: 1px solid var(--line); margin-top: 12px; color: var(--muted); font-size: 11.5px; }
+    button { font: inherit; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--fg); padding: 5px 10px; cursor: pointer; }
+    button.armed { border-color: #c4452f; color: #c4452f; }
+    .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" alt="">
+    <h1>Droplet</h1>
+  </header>
+
+  <section class="totals">
+    <div class="stat"><div class="k">Today</div><div class="v" id="today">0 mL</div><div class="c" id="todayCmp"></div></div>
+    <div class="stat"><div class="k">All time</div><div class="v" id="all">0 mL</div><div class="c" id="allCmp"></div></div>
+  </section>
+
+  <form id="form">
+    <label>
+      <span class="lbl">Model size</span>
+      <select id="model">
+        <option value="auto">Auto-detect from the page</option>
+        <option value="large">Large (Opus, Fable)</option>
+        <option value="medium">Mid-size (Sonnet)</option>
+        <option value="small">Small (Haiku)</option>
+      </select>
+    </label>
+    <label>
+      <span class="lbl">Reasoning</span>
+      <select id="reasoning">
+        <option value="none">None (×1)</option>
+        <option value="some">Some (×1.9)</option>
+        <option value="extended">Extended thinking (×10)</option>
+      </select>
+      <span class="hint">Hidden thinking isn't visible on the page, so it's applied as a multiplier.</span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="countContext">
+      <span><span class="lbl">Count the conversation it re-reads</span>
+      <span class="hint">Each reply reads the whole chat so far. Earlier messages are mostly cached, so they count at 10% of the reading cost.</span></span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="powerPlant">
+      <span><span class="lbl">Include power-plant water in totals</span>
+      <span class="hint">Water used to generate the electricity, several times the cooling figure. The hover breakdown always shows both.</span></span>
+    </label>
+    <label class="check">
+      <input type="checkbox" id="hidden">
+      <span><span class="lbl">Hide the glass on claude.ai</span></span>
+    </label>
+  </form>
+
+  <footer>
+    <div class="row">
+      <span>Rough estimates only.</span>
+      <button type="button" id="reset">Reset totals</button>
+    </div>
+    Anthropic doesn't publish water figures. These numbers come from public research (see README). Runs locally and sends nothing anywhere.
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
